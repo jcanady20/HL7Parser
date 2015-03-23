@@ -1,0 +1,126 @@
+﻿<Window x:Class="HL7Parser.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="HL7 Parser"
+		Height="550"
+		Width="725"
+		>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+		<TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="TabControl_SelectionChanged" >
+			<TabItem x:Name="Editor">
+				<TabItem.Header>
+					<StackPanel Orientation="Horizontal">
+						<Image Source="Images/126_Edit_24x24_72.png" Height="23" Width="23" />
+						<TextBlock Text="Editor" VerticalAlignment="Center" Margin="3, 0, 0, 0" FontWeight="Bold" />
+					</StackPanel>
+				</TabItem.Header>
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="28" />
+						<RowDefinition Height="*" />
+					</Grid.RowDefinitions>
+					<ToolBar Grid.Row="0" ToolBarTray.IsLocked="True">
+						<Button x:Name="btnOpenFile" Width="23" Height="23" ToolTip="Open File" Click="btnOpenFile_Click">
+							<Image Source="Images/OpenSelectedItemHS.png" />
+						</Button>
+						<Button x:Name="btnSave" Width="23" Height="23" ToolTip="Save File" Click="btnSave_Click">
+							<Image Source="Images/Editor/base_floppydisk_32.png" />
+						</Button>
+						<Button x:Name="btnFind" Width="23" Height="23" ToolTip="Find" Click="btnFind_Click">
+							<Image Source="Images/Editor/Find_VS.png" />
+						</Button>
+						<Button x:Name="btnParseMessage" Width="23" Height="23" ToolTip="Parse File" Click="btnParseMessage_Click">
+							<Image Source="Images/Editor/RelationshipsHS.png" />
+						</Button>
+					</ToolBar>
+					<TextBox x:Name="txtbxMessage" Grid.Row="1" TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" AcceptsReturn="True" />
+
+				</Grid>
+			</TabItem>
+			<TabItem x:Name="ParseResults">
+				<TabItem.Header>
+					<StackPanel Orientation="Horizontal">
+						<Image Source="Images/XSDSchema_GoToGraphViewCmd2.png" Height="23" Width="23" />
+						<TextBlock Text="Parser" VerticalAlignment="Center" Margin="3, 0, 0, 0" FontWeight="Bold" />
+					</StackPanel>
+				</TabItem.Header>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<TreeView x:Name="trvOverView" Margin="6,6,6,6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" MouseUp="trvOverView_MouseUp">
+						<TreeView.ItemTemplate>
+							<HierarchicalDataTemplate ItemsSource="{Binding Children}" >
+								<Grid>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition />
+										<ColumnDefinition />
+										<ColumnDefinition />
+										<ColumnDefinition />
+									</Grid.ColumnDefinitions>
+									<TextBlock Text="{Binding Id, FallbackValue='', TargetNullValue=''}" FontWeight="Bold" Grid.Column="0" Margin="3" />
+									<TextBlock Text="{Binding Name, StringFormat='>{0}'}" FontWeight="Bold" Grid.Column="1" Margin="3" />
+									<TextBlock Text="{Binding Content}" Grid.Column="2" Margin="3" />
+									<TextBlock Text="{Binding Description}" Grid.Column="3" Margin="3" />
+								</Grid>
+							</HierarchicalDataTemplate>
+						</TreeView.ItemTemplate>
+					</TreeView>
+				</Grid>
+			</TabItem>
+			<TabItem x:Name="DataSources">
+				<TabItem.Header>
+					<StackPanel Orientation="Horizontal">
+						<Image Source="Images/base_cylinder_32.png" Height="23" Width="23" />
+						<TextBlock Text="Data Source" VerticalAlignment="Center" Margin="3, 0, 0, 0" FontWeight="Bold" />
+					</StackPanel>
+				</TabItem.Header>
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="32" />
+						<RowDefinition Height="*" />
+					</Grid.RowDefinitions>
+					<Grid VerticalAlignment="Top">
+						<StackPanel Orientation="Horizontal">
+							<Button x:Name="btnRefreshSDataSource" Width="23" Height="23" HorizontalAlignment="Left"  Margin="3" Click="btnRefreshSDataSource_Click" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+							<Image Source="Images/RepeatHS.png" />
+						</Button>
+						<Rectangle Width="4" HorizontalAlignment="Left" />
+							<TextBlock Text="DataSources:" VerticalAlignment="Center"  Margin="3" />
+							<ComboBox x:Name="cmbxDataSources" Width="120" SelectedIndex="0" Margin="3" Height="23" Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}">
+								<ComboBoxItem Content="HL7 2.3" />
+								<ComboBoxItem Content="HL7 2.5" />
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+							<Button x:Name="btnSelectSearchColumns" Width="23" Height="23" Margin="3,0,0,0" Click="btnSelectSearchColumns_Click" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+								<StackPanel Orientation="Horizontal">
+									<Image Source="Images/ZoomHS.png" />
+								</StackPanel>
+							</Button>
+							<TextBox x:Name="txtbxDataSourceSearch" Height="23" Width="150" BorderThickness="1" BorderBrush="Black" Margin="3" TextChanged="txtbxDataSourceSearch_TextChanged"/>
+						</StackPanel>
+					</Grid>
+					<DataGrid Grid.Row="1" x:Name="dgDataSourceView" AutoGenerateColumns="False" RowHeaderWidth="0" IsReadOnly="True">
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Segment" Binding="{Binding Segment}" />
+							<DataGridTextColumn Header="Seq" Binding="{Binding Sequence}" Width="45"/>
+							<DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" />
+							<DataGridTextColumn Header="Length" Binding="{Binding Length}"/>
+							<DataGridTextColumn Header="Repeatable" Binding="{Binding Repeatable}"/>
+						</DataGrid.Columns>
+					</DataGrid>
+				</Grid>
+			</TabItem>
+			<TabItem x:Name="SnoopTab">
+				<TabItem.Header>
+					<StackPanel Orientation="Horizontal">
+						<Image Source="Images/iNetwork.png" Height="23" Width="23" />
+						<TextBlock Text="Nextwork Snoop" VerticalAlignment="Center" Margin="3, 0, 0, 0" FontWeight="Bold" />
+					</StackPanel>
+				</TabItem.Header>
+				<Grid x:Name="SnoopContent"></Grid>
+			</TabItem>
+		</TabControl>
+	</Grid>
+</Window>

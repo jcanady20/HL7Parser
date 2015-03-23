@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="HL7Parser.Controls.SnoopControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="500">
+    <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition />
+			<RowDefinition />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<GridSplitter Grid.Row="0" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
+		<GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
+		<StackPanel Grid.Row="0" Height="28" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="NearestNeighbor" Orientation="Horizontal">
+			<Button x:Name="btnSaveCapture" Width="23" Height="23" Click="btnSaveCapture_Click" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+				<StackPanel>
+					<Image Source="/Images/SaveHS.png" />
+				</StackPanel>
+			</Button>
+			<Button x:Name="btnNewCapture" Width="23" Height="23" Click="btnNewCapture_Click" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+				<StackPanel>
+					<Image Source="/Images/PacketCapture/NewWindow.png" />
+				</StackPanel>
+			</Button>
+			<Rectangle Width="4" />
+			<Button x:Name="btnStartCapture" Width="23" Height="23" Click="btnStartCapture_Click" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+				<StackPanel>
+					<Image Source="/Images/PacketCapture/PlayHS.png" />
+				</StackPanel>
+			</Button>
+			<Button x:Name="btnStopCapture" Width="23" Height="23" Click="btnStopCapture_Click" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+				<StackPanel>
+					<Image Source="/Images/PacketCapture/StopHS.png" />
+				</StackPanel>
+			</Button>
+			<Rectangle Width="4" />
+			<TextBlock Text="IP Interfaces: " VerticalAlignment="Center" />
+			<ComboBox x:Name="cmbxIpAddress" Width="110" Height="23" SelectionChanged="cmbxIpAddress_SelectionChanged"  Style="{StaticResource {x:Static ToolBar.ComboBoxStyleKey}}" />
+		</StackPanel>
+		<DataGrid x:Name="dgPacketBuffer" Grid.Row="0" Margin="0,28,0,5" IsReadOnly="True" SelectionMode="Single" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserSortColumns="False">
+			<DataGrid.Columns>
+					<DataGridTextColumn Width="90" Binding="{Binding TimeStamp, StringFormat=T}">
+					<DataGridTextColumn.Header>
+						<TextBlock Text="Time" FontWeight="Bold" />
+					</DataGridTextColumn.Header>
+				</DataGridTextColumn>
+				<DataGridTextColumn Width="110" Binding="{Binding IPHeader.SourceAddress}">
+					<DataGridTextColumn.Header>
+						<TextBlock Text="Source" FontWeight="Bold" />
+					</DataGridTextColumn.Header>
+				</DataGridTextColumn>
+				<DataGridTextColumn Width="110" Binding="{Binding IPHeader.DestinationAddress}">
+					<DataGridTextColumn.Header>
+						<TextBlock Text="Destination" FontWeight="Bold" />
+					</DataGridTextColumn.Header>
+				</DataGridTextColumn>
+				<DataGridTextColumn Binding="{Binding PacketLength}">
+					<DataGridTextColumn.Header>
+						<TextBlock Text="Length" FontWeight="Bold" />
+					</DataGridTextColumn.Header>
+				</DataGridTextColumn>
+				<DataGridTextColumn Binding="{Binding IPHeader.TTL}">
+					<DataGridTextColumn.Header>
+						<TextBlock Text="TTL" FontWeight="Bold" />
+					</DataGridTextColumn.Header>
+				</DataGridTextColumn>
+				<DataGridTextColumn Binding="{Binding ProtocolName}">
+					<DataGridTextColumn.Header>
+						<TextBlock Text="Protocol" FontWeight="Bold" />
+					</DataGridTextColumn.Header>
+				</DataGridTextColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+		<TreeView x:Name="trvProtocolStack" Grid.Row="1" Margin="0,0,0,5" />
+		<Border BorderBrush="Black" BorderThickness="1" Grid.Row="2" DataContext="{Binding ElementName=dgPacketBuffer, Path=SelectedItem}">
+			<ScrollViewer>
+				<TextBlock x:Name="txtblkHexView" Text="{Binding Path=HexView}" FontFamily="Courier New"  />
+			</ScrollViewer>
+		</Border>
+	</Grid>
+</UserControl>
